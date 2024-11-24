@@ -50,4 +50,19 @@ public class UserController {
         }
     }
 
+    //delete user using the delete method
+    @DeleteMapping("/user/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable Long id){
+        try{
+            if(userRepository.existsById(id)){
+                userRepository.deleteById(id);
+                return ResponseEntity.ok("User deleted successfully");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error ocurred while deleting the user");
+        }
+    }
+
 }
