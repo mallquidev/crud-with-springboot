@@ -65,4 +65,32 @@ public class UserController {
         }
     }
 
+    //update user using the put method
+    @PutMapping("/user/{id}")
+    public ResponseEntity<String> updateUser(@PathVariable Long id, @RequestBody User updateUser){
+        try{
+            Optional<User> userOptional=userRepository.findById(id);
+
+            if(userOptional.isPresent()){
+                User user = userOptional.get();
+                //Update user fields
+                user.setName(updateUser.getName());
+                user.setPassword(updateUser.getPassword());
+
+                //Save updated user to database
+                userRepository.save(user);
+
+                //return successful response
+                return ResponseEntity.ok("User updated successfully ");
+            } else {
+                //User not found
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating user"+e.getMessage());
+        }
+
+
+    }
+
 }
